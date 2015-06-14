@@ -26,7 +26,7 @@ type Photo struct {
 func main() {
 	// Get Vk user id from and save location from the flags
 	currentPath, _ := os.Getwd()
-	userIDPtr := flag.String("uid", "6447964", "User id of your Vkontakte account.")
+	userIDPtr := flag.String("uid", "1", "User id of your Vkontakte account.")
 	pathPtr := flag.String("path", currentPath, "Albums download path")
 
 	flag.Parse()
