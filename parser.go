@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path"
 	"strconv"
 )
 
@@ -39,12 +40,14 @@ func main() {
 	// Parse all albums
 	albums := parseAlbums(*userIDPtr)
 	for _, album := range albums {
+		fmt.Print("Parsing album" + album.title)
 		// Create a folder for that album
-		//os.Mkdir(album.title, 0777)
+		albumFolder := path.Join(*pathPtr, album.title)
+		os.Mkdir(albumFolder, 0777)
 		photos := parsePhotos(*userIDPtr, album.id)
 		for _, photo := range photos {
 			// Save photo by url to the destination folder
-			//downloadPhoto(path string, name string, url string)
+			downloadPhoto(albumFolder, photo.id, photo.link)
 		}
 
 	}
@@ -83,7 +86,6 @@ func parsePhotos(uid string, albumID string) []Photo {
 
 	// Perform a request to the API
 	url := fmt.Sprintf("https://api.vk.com/method/photos.get.json?owner_id=%v&album_id=%v&v=5.34", uid, albumID)
-	fmt.Println(url)
 	response, _ := http.Get(url)
 
 	// Reading the request contents
@@ -115,6 +117,15 @@ func parsePhotos(uid string, albumID string) []Photo {
 	return photos
 }
 
-func downloadPhoto(path string, name string, url string) {
+func downloadPhoto(albumPath string, name string, url string) {
+	//fmt.Println(url)
+	response, error := http.Get(url)
+	if error != nil {
+		println(error)
+	}
+	imageData, _ := ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
 
+	ioutil.WriteFile(path.Join(albumPath, name+".jpg"), imageData, 0777)
+	println("Downloaded photo " + name)
 }
