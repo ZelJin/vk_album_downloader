@@ -54,6 +54,8 @@ func main() {
 
 }
 
+// parseAlbums call VK API to get the list of user's albums.
+// returns an array of album metadata
 func parseAlbums(uid string) []Album {
 	// Initialize an empty []Album object
 	var albums []Album
@@ -80,6 +82,8 @@ func parseAlbums(uid string) []Album {
 	return albums
 }
 
+// parsePhotos calls VK API to get the list of photos in the album.
+// returns an array of photo metadata
 func parsePhotos(uid string, albumID string) []Photo {
 	// Initialize an empty []Album object
 	var photos []Photo
@@ -117,6 +121,8 @@ func parsePhotos(uid string, albumID string) []Photo {
 	return photos
 }
 
+// downloadPhoto downloads an online picture from a remote URL and stores it
+// in a folder defined by albumPath variable.
 func downloadPhoto(albumPath string, name string, url string) {
 	//fmt.Println(url)
 	response, error := http.Get(url)
